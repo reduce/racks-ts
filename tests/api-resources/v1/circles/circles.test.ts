@@ -1,6 +1,6 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-import Racks from 'racks';
+import Racks from 'racks.cash';
 
 const client = new Racks({
   apiKey: 'My API Key',

@@ -5,8 +5,8 @@
   "compilerOptions": {
     "rootDir": "./dist/src",
     "paths": {
-      "racks/*": ["./dist/src/*"],
-      "racks": ["./dist/src/index.ts"]
+      "racks.cash/*": ["./dist/src/*"],
+      "racks.cash": ["./dist/src/index.ts"]
     },
     "noEmit": false,
     "declaration": true,

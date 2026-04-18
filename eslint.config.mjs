@@ -25,7 +25,7 @@ export default tseslint.config(
         {
           patterns: [
             {
-              regex: '^racks(/.*)?',
+              regex: '^racks.cash(/.*)?',
               message: 'Use a relative import, not a package import.',
             },
           ],
