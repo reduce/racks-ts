@@ -5,40 +5,29 @@ import { APIPromise } from '../../core/api-promise';
 import { RequestOptions } from '../../internal/request-options';
 
 /**
- * Read-only user API. Authenticate with **any** of:
- * - Key pair: `Authorization: Bearer <private-key-pem>` + `X-Client-Key: <public-key-pem>`
- * - PAT: `Authorization: Bearer racks_<64 hex>`
- * - Session JWT cookie (for on-site use — signed-in browser automatically sends this)
+ * Authenticated user's own profile and keys
  */
 export class Me extends APIResource {
   /**
-   * Current user profile
+   * Returns the authenticated user's profile, stats (cents earned/tipped), XP,
+   * level, and default AI model.
    */
   retrieve(options?: RequestOptions): APIPromise<MeRetrieveResponse> {
-    return this._client.get('/api/v1/me', {
-      ...options,
-      __security: { secretKeyAuth: true, clientKeyAuth: true },
-    });
+    return this._client.get('/api/v1/me', options);
   }
 
   /**
-   * Earned badges
+   * Earned badges for the token owner
    */
   listBadges(options?: RequestOptions): APIPromise<MeListBadgesResponse> {
-    return this._client.get('/api/v1/me/badges', {
-      ...options,
-      __security: { secretKeyAuth: true, clientKeyAuth: true },
-    });
+    return this._client.get('/api/v1/me/badges', options);
   }
 
   /**
-   * Circle memberships
+   * Returns all circles the authenticated user belongs to, with role and timestamps.
    */
   listCircles(options?: RequestOptions): APIPromise<MeListCirclesResponse> {
-    return this._client.get('/api/v1/me/circles', {
-      ...options,
-      __security: { secretKeyAuth: true, clientKeyAuth: true },
-    });
+    return this._client.get('/api/v1/me/circles', options);
   }
 }
 
@@ -66,12 +55,12 @@ export interface MeRetrieveResponse {
   streakDays?: number;
 
   /**
-   * Cents
+   * Lifetime earnings in cents
    */
   totalEarned?: number;
 
   /**
-   * Cents
+   * Lifetime tips given in cents
    */
   totalTipped?: number;
 
@@ -90,7 +79,7 @@ export namespace MeListBadgesResponse {
 
     earnedAt?: string;
 
-    emoji?: string;
+    emoji?: string | null;
 
     name?: string;
 
@@ -110,7 +99,7 @@ export namespace MeListCirclesResponse {
 
     createdAt?: string;
 
-    emoji?: string;
+    emoji?: string | null;
 
     isOwner?: boolean;
 

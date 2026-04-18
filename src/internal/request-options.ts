@@ -3,7 +3,6 @@
 import { NullableHeaders } from './headers';
 
 import type { BodyInit } from './builtin-types';
-import { Stream } from '../core/streaming';
 import type { HTTPMethod, MergedRequestInit } from './types';
 import { type HeadersLike } from './headers';
 
@@ -76,16 +75,7 @@ export type RequestOptions = {
    */
   defaultBaseURL?: string | undefined;
 
-  __security?: {
-    secretKeyAuth?: boolean;
-    clientKeyAuth?: boolean;
-    aiDelegationBearerAuth?: boolean;
-    zealyWebhookAuth?: boolean;
-    telegramWebhookAuth?: boolean;
-  };
-
   __binaryResponse?: boolean | undefined;
-  __streamClass?: typeof Stream;
 };
 
 export type EncodedContent = { bodyHeaders: HeadersLike; body: BodyInit };

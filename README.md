@@ -40,7 +40,7 @@ import Racks from 'racks';
 
 const client = new Racks();
 
-const response: Racks.MetaRetrieveRacksAPIResponse = await client.meta.retrieveRacksAPI();
+const response: unknown = await client.meta.retrieveRacksAPI();
 ```
 
 Documentation for each method, request param, and response field are available in docstrings and will appear on hover in most modern editors.

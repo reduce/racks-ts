@@ -6,89 +6,67 @@ import { RequestOptions } from '../../internal/request-options';
 import { path } from '../../internal/utils/path';
 
 /**
- * Developer credential management (browser session required)
+ * Authenticated user's own profile and keys
  */
 export class APIKeys extends APIResource {
   /**
-   * Creates either a **personal access token (PAT)** or an **Ed25519 key pair**,
-   * depending on the `type` field.
+   * Creates a new PAT or Ed25519 key pair. The plaintext key / private key PEM is
+   * returned **once** and never stored.
    *
-   * - `type: "pat"` — generates a PAT (`racks_…`). The full secret is returned once
-   *   in `key`.
-   * - `type: "keypair"` — generates an Ed25519 key pair. The private key PEM is
-   *   returned once in `privateKeyPem`. The public key PEM is stored and always
-   *   retrievable.
-   *
-   * **Save the secret/private key immediately** — it is never shown again.
-   *
-   * Maximum 10 credentials per user across both types.
+   * @example
+   * ```ts
+   * const apiKey = await client.user.apiKeys.create();
+   * ```
    */
   create(
     body: APIKeyCreateParams | null | undefined = {},
     options?: RequestOptions,
   ): APIPromise<APIKeyCreateResponse> {
-    return this._client.post('/api/user/api-keys', { body, ...options, __security: {} });
+    return this._client.post('/api/user/api-keys', { body, ...options });
   }
 
   /**
-   * Returns all credentials for the authenticated user. Secrets and private keys are
-   * **never** returned by this endpoint; only non-sensitive metadata is included.
+   * Returns metadata for all your API keys (PATs and Ed25519 key pairs). The
+   * plaintext key is **never** returned here — only on creation.
+   *
+   * @example
+   * ```ts
+   * const apiKeys = await client.user.apiKeys.list();
+   * ```
    */
   list(options?: RequestOptions): APIPromise<APIKeyListResponse> {
-    return this._client.get('/api/user/api-keys', { ...options, __security: {} });
+    return this._client.get('/api/user/api-keys', options);
   }
 
   /**
-   * Revoke an API key
+   * Permanently revokes one of your API keys. This cannot be undone.
+   *
+   * @example
+   * ```ts
+   * const response = await client.user.apiKeys.revoke('id');
+   * ```
    */
   revoke(id: string, options?: RequestOptions): APIPromise<APIKeyRevokeResponse> {
-    return this._client.delete(path`/api/user/api-keys/${id}`, { ...options, __security: {} });
+    return this._client.delete(path`/api/user/api-keys/${id}`, options);
   }
 }
 
-/**
- * Response shape differs by `type`:
- *
- * - PAT: `key` contains the full `racks_…` secret (shown once).
- * - Key pair: `privateKeyPem` contains the PKCS#8 private key PEM (shown once);
- *   `publicKeyPem` and `fingerprint` are always available.
- */
 export interface APIKeyCreateResponse {
-  id: string;
-
-  createdAt: string;
-
-  prefix: string;
-
-  type: 'PAT' | 'KEYPAIR';
+  id?: string;
 
   /**
-   * Reminder that secrets are shown only once
-   */
-  warning: string;
-
-  /**
-   * **Key pair only.** `SHA256:<base64>` fingerprint for identification.
+   * SHA256 fingerprint of the public key (Ed25519 keys only)
    */
   fingerprint?: string | null;
 
   /**
-   * **PAT only.** Full `racks_<64 hex>` token. Shown once — save it immediately.
+   * Full `racks_…` token (PAT) or private key PEM (Ed25519) — store it now, it will
+   * not be shown again
    */
-  key?: string | null;
-
-  name?: string | null;
+  key?: string;
 
   /**
-   * **Key pair only.** PKCS#8 Ed25519 private key PEM. Shown once — save it
-   * immediately. Use as `Authorization: Bearer <this value>` (with literal `\n`
-   * preserved).
-   */
-  privateKeyPem?: string | null;
-
-  /**
-   * **Key pair only.** SPKI Ed25519 public key PEM. Always retrievable from the list
-   * endpoint. Send as `X-Client-Key: <this value>` alongside every request.
+   * Ed25519 public key PEM (Ed25519 keys only)
    */
   publicKeyPem?: string | null;
 }
@@ -98,63 +76,38 @@ export interface APIKeyListResponse {
 }
 
 export namespace APIKeyListResponse {
-  /**
-   * Metadata for a single credential (PAT or key pair). Secrets are never included.
-   */
   export interface Key {
-    /**
-     * Unique credential ID (cuid)
-     */
     id?: string;
 
     createdAt?: string;
 
-    /**
-     * `SHA256:<base64>` fingerprint of the public key. Present only for `KEYPAIR`.
-     */
-    fingerprint?: string | null;
-
     lastUsedAt?: string | null;
 
-    /**
-     * Optional user-supplied label
-     */
     name?: string | null;
 
     /**
-     * First 8 hex chars of the token secret (PAT) or last 16 hex chars of the
-     * public-key fingerprint (key pair) — for UI display only.
+     * First 8 hex chars of the secret (safe to display)
      */
     prefix?: string;
 
-    /**
-     * SPKI Ed25519 public key PEM. Present only for `KEYPAIR` credentials. Send this
-     * in the `X-Client-Key` header when authenticating.
-     */
-    publicKeyPem?: string | null;
-
-    /**
-     * `PAT` — personal access token; `KEYPAIR` — Ed25519 key pair
-     */
-    type?: 'PAT' | 'KEYPAIR';
+    type?: 'PAT' | 'ED25519';
   }
 }
 
 export interface APIKeyRevokeResponse {
-  ok?: boolean;
+  deleted?: boolean;
 }
 
 export interface APIKeyCreateParams {
   /**
-   * Optional human-readable label
+   * Optional label for the key (max 64 characters)
    */
   name?: string;
 
   /**
-   * `pat` — personal access token (single opaque bearer token). `keypair` — Ed25519
-   * asymmetric key pair (private key + public key).
+   * Key type — PAT for Bearer tokens, ED25519 for asymmetric signing
    */
-  type?: 'pat' | 'keypair';
+  type?: 'PAT' | 'ED25519';
 }
 
 export declare namespace APIKeys {
