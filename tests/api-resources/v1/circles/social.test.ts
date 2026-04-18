@@ -7,10 +7,10 @@ const client = new Racks({
   baseURL: process.env['TEST_API_BASE_URL'] ?? 'http://127.0.0.1:4010',
 });
 
-describe('resource meta', () => {
+describe('resource social', () => {
   // Mock server tests are disabled
-  test.skip('retrieveOpenAPI', async () => {
-    const responsePromise = client.meta.retrieveOpenAPI();
+  test.skip('listAccounts', async () => {
+    const responsePromise = client.v1.circles.social.listAccounts('id');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -21,8 +21,10 @@ describe('resource meta', () => {
   });
 
   // Mock server tests are disabled
-  test.skip('retrieveRacksAPI', async () => {
-    const responsePromise = client.meta.retrieveRacksAPI();
+  test.skip('publish: only required params', async () => {
+    const responsePromise = client.v1.circles.social.publish('id', {
+      content: 'We just hit 1000 members! LFG 🔥',
+    });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -30,5 +32,14 @@ describe('resource meta', () => {
     const dataAndResponse = await responsePromise.withResponse();
     expect(dataAndResponse.data).toBe(response);
     expect(dataAndResponse.response).toBe(rawResponse);
+  });
+
+  // Mock server tests are disabled
+  test.skip('publish: required and optional params', async () => {
+    const response = await client.v1.circles.social.publish('id', {
+      content: 'We just hit 1000 members! LFG 🔥',
+      accounts: ['string'],
+      mediaUrl: 'mediaUrl',
+    });
   });
 });

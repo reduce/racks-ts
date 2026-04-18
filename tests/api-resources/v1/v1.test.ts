@@ -7,10 +7,10 @@ const client = new Racks({
   baseURL: process.env['TEST_API_BASE_URL'] ?? 'http://127.0.0.1:4010',
 });
 
-describe('resource meta', () => {
+describe('resource v1', () => {
   // Mock server tests are disabled
-  test.skip('retrieveOpenAPI', async () => {
-    const responsePromise = client.meta.retrieveOpenAPI();
+  test.skip('retrieveGlobalLeaderboard', async () => {
+    const responsePromise = client.v1.retrieveGlobalLeaderboard();
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -21,14 +21,10 @@ describe('resource meta', () => {
   });
 
   // Mock server tests are disabled
-  test.skip('retrieveRacksAPI', async () => {
-    const responsePromise = client.meta.retrieveRacksAPI();
-    const rawResponse = await responsePromise.asResponse();
-    expect(rawResponse).toBeInstanceOf(Response);
-    const response = await responsePromise;
-    expect(response).not.toBeInstanceOf(Response);
-    const dataAndResponse = await responsePromise.withResponse();
-    expect(dataAndResponse.data).toBe(response);
-    expect(dataAndResponse.response).toBe(rawResponse);
+  test.skip('retrieveGlobalLeaderboard: request options and params are passed correctly', async () => {
+    // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
+    await expect(
+      client.v1.retrieveGlobalLeaderboard({ limit: 1 }, { path: '/_stainless_unknown_path' }),
+    ).rejects.toThrow(Racks.NotFoundError);
   });
 });

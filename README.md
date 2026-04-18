@@ -11,7 +11,7 @@ It is generated with [Stainless](https://www.stainless.com/).
 ## Installation
 
 ```sh
-npm install git+ssh://git@github.com:reduce/racks-ts.git
+npm install git+ssh://git@github.com:stainless-sdks/racks-typescript.git
 ```
 
 > [!NOTE]
@@ -25,9 +25,11 @@ The full API of this library can be found in [api.md](api.md).
 ```js
 import Racks from 'racks';
 
-const client = new Racks();
+const client = new Racks({
+  environment: 'environment_1', // defaults to 'production'
+});
 
-const response = await client.meta.retrieveRacksAPI();
+const response = await client.meta.retrieveOpenAPI();
 ```
 
 ### Request & Response types
@@ -38,9 +40,11 @@ This library includes TypeScript definitions for all request params and response
 ```ts
 import Racks from 'racks';
 
-const client = new Racks();
+const client = new Racks({
+  environment: 'environment_1', // defaults to 'production'
+});
 
-const response: unknown = await client.meta.retrieveRacksAPI();
+const response: string = await client.meta.retrieveOpenAPI();
 ```
 
 Documentation for each method, request param, and response field are available in docstrings and will appear on hover in most modern editors.
@@ -53,7 +57,7 @@ a subclass of `APIError` will be thrown:
 
 <!-- prettier-ignore -->
 ```ts
-const response = await client.meta.retrieveRacksAPI().catch(async (err) => {
+const response = await client.meta.retrieveOpenAPI().catch(async (err) => {
   if (err instanceof Racks.APIError) {
     console.log(err.status); // 400
     console.log(err.name); // BadRequestError
@@ -93,7 +97,7 @@ const client = new Racks({
 });
 
 // Or, configure per-request:
-await client.meta.retrieveRacksAPI({
+await client.meta.retrieveOpenAPI({
   maxRetries: 5,
 });
 ```
@@ -110,7 +114,7 @@ const client = new Racks({
 });
 
 // Override per-request:
-await client.meta.retrieveRacksAPI({
+await client.meta.retrieveOpenAPI({
   timeout: 5 * 1000,
 });
 ```
@@ -133,11 +137,11 @@ Unlike `.asResponse()` this method consumes the body, returning once it is parse
 ```ts
 const client = new Racks();
 
-const response = await client.meta.retrieveRacksAPI().asResponse();
+const response = await client.meta.retrieveOpenAPI().asResponse();
 console.log(response.headers.get('X-My-Header'));
 console.log(response.statusText); // access the underlying Response object
 
-const { data: response, response: raw } = await client.meta.retrieveRacksAPI().withResponse();
+const { data: response, response: raw } = await client.meta.retrieveOpenAPI().withResponse();
 console.log(raw.headers.get('X-My-Header'));
 console.log(response);
 ```
@@ -219,7 +223,7 @@ parameter. This library doesn't validate at runtime that the request matches the
 send will be sent as-is.
 
 ```ts
-client.meta.retrieveRacksAPI({
+client.meta.retrieveOpenAPI({
   // ...
   // @ts-expect-error baz is not yet public
   baz: 'undocumented option',
@@ -329,7 +333,7 @@ This package generally follows [SemVer](https://semver.org/spec/v2.0.0.html) con
 
 We take backwards-compatibility seriously and work hard to ensure you can rely on a smooth upgrade experience.
 
-We are keen for your feedback; please open an [issue](https://www.github.com/reduce/racks-ts/issues) with questions, bugs, or suggestions.
+We are keen for your feedback; please open an [issue](https://www.github.com/stainless-sdks/racks-typescript/issues) with questions, bugs, or suggestions.
 
 ## Requirements
 
