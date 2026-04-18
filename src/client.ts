@@ -18,13 +18,14 @@ import * as Uploads from './core/uploads';
 import * as API from './resources/index';
 import { APIPromise } from './core/api-promise';
 import { Meta, MetaRetrieveOpenAPIResponse, MetaRetrieveRacksAPIResponse } from './resources/meta';
-import { Telegram } from './resources/telegram';
-import { Zealy } from './resources/zealy';
-import { Zernio } from './resources/zernio';
-import { AI } from './resources/ai/ai';
-import { Raids } from './resources/raids/raids';
+import { Circles } from './resources/circles/circles';
 import { User } from './resources/user/user';
-import { V1 } from './resources/v1/v1';
+import {
+  LeaderboardEntry,
+  V1,
+  V1RetrieveGlobalLeaderboardParams,
+  V1RetrieveGlobalLeaderboardResponse,
+} from './resources/v1/v1';
 import { type Fetch } from './internal/builtin-types';
 import { HeadersLike, NullableHeaders, buildHeaders } from './internal/headers';
 import { FinalRequestOptions, RequestOptions } from './internal/request-options';
@@ -38,52 +39,28 @@ import {
 } from './internal/utils/log';
 import { isEmptyObj } from './internal/utils/values';
 
+const environments = {
+  production: 'https://racks.cash',
+  environment_1: 'http://localhost:3000',
+};
+type Environment = keyof typeof environments;
+
 export interface ClientOptions {
   /**
-   * **Key-pair mode** — the Ed25519 private key PEM (PKCS#8, single line with `\n` escapes).
-   * Must be paired with `X-Client-Key` (your public key PEM).
-   *
-   * **PAT mode** — a personal access token in the form `racks_<64 hex chars>`.
-   * No `X-Client-Key` header required.
-   *
-   * Generate either credential under **Settings → Developer**.
-   *
-   */
-  secret?: string | null | undefined;
-
-  /**
-   * **Required when using key-pair auth** — the Ed25519 public key PEM (SPKI format).
-   * The server uses this to look up your registered key pair before verifying the private key
-   * in the `Authorization` header.
-   *
-   * Omit this header when authenticating with a PAT (`racks_…`).
-   *
-   * Your public key is always visible in **Settings → Developer → Key Pairs**.
-   *
-   */
-  publicKey?: string | null | undefined;
-
-  /**
-   * Short-lived HMAC token issued by the assistant's `runSandboxCode` tool when
-   * `allowAppDelegation` is true. Not a user credential; internal use only.
+   * Circle API Key — `racks_circle_` followed by 64 lowercase hex characters.
+   * Generate one in the circle's Settings → API Keys page.
    *
    */
   apiKey?: string | null | undefined;
 
   /**
-   * HMAC-SHA256 of raw body — `sha256=<hex>` format per Zealy docs
+   * Specifies the environment to use for the API.
+   *
+   * Each environment maps to a different base URL:
+   * - `production` corresponds to `https://racks.cash`
+   * - `environment_1` corresponds to `http://localhost:3000`
    */
-  webhookSignature?: string | null | undefined;
-
-  /**
-   * Must equal `TELEGRAM_WEBHOOK_SECRET` environment variable
-   */
-  webhookSecret?: string | null | undefined;
-
-  /**
-   * Deployment origin (e.g. http://localhost:3000 for local dev)
-   */
-  origin?: string | undefined;
+  environment?: Environment | undefined;
 
   /**
    * Override the default base URL for the API, e.g., "https://api.example.com/v2/"
@@ -158,12 +135,7 @@ export interface ClientOptions {
  * API Client for interfacing with the Racks API.
  */
 export class Racks {
-  secret: string | null;
-  publicKey: string | null;
   apiKey: string | null;
-  webhookSignature: string | null;
-  webhookSecret: string | null;
-  origin: string;
 
   baseURL: string;
   maxRetries: number;
@@ -180,13 +152,9 @@ export class Racks {
   /**
    * API Client for interfacing with the Racks API.
    *
-   * @param {string | null | undefined} [opts.secret=process.env['RACKS_SECRET'] ?? null]
-   * @param {string | null | undefined} [opts.publicKey=process.env['RACKS_PUBLIC_KEY'] ?? null]
    * @param {string | null | undefined} [opts.apiKey=process.env['RACKS_API_KEY'] ?? null]
-   * @param {string | null | undefined} [opts.webhookSignature=process.env['RACKS_WEBHOOK_SIGNATURE'] ?? null]
-   * @param {string | null | undefined} [opts.webhookSecret=process.env['RACKS_WEBHOOK_SECRET'] ?? null]
-   * @param {string | undefined} [opts.origin=process.env['RACKS_ORIGIN'] ?? https://racks.cash]
-   * @param {string} [opts.baseURL=process.env['RACKS_BASE_URL'] ?? {origin}] - Override the default base URL for the API.
+   * @param {Environment} [opts.environment=production] - Specifies the environment URL to use for the API.
+   * @param {string} [opts.baseURL=process.env['RACKS_BASE_URL'] ?? https://racks.cash] - Override the default base URL for the API.
    * @param {number} [opts.timeout=1 minute] - The maximum amount of time (in milliseconds) the client will wait for a response before timing out.
    * @param {MergedRequestInit} [opts.fetchOptions] - Additional `RequestInit` options to be passed to `fetch` calls.
    * @param {Fetch} [opts.fetch] - Specify a custom `fetch` function implementation.
@@ -196,26 +164,23 @@ export class Racks {
    */
   constructor({
     baseURL = readEnv('RACKS_BASE_URL'),
-    secret = readEnv('RACKS_SECRET') ?? null,
-    publicKey = readEnv('RACKS_PUBLIC_KEY') ?? null,
     apiKey = readEnv('RACKS_API_KEY') ?? null,
-    webhookSignature = readEnv('RACKS_WEBHOOK_SIGNATURE') ?? null,
-    webhookSecret = readEnv('RACKS_WEBHOOK_SECRET') ?? null,
-    origin = readEnv('RACKS_ORIGIN') ?? 'https://racks.cash',
     ...opts
   }: ClientOptions = {}) {
     const options: ClientOptions = {
-      secret,
-      publicKey,
       apiKey,
-      webhookSignature,
-      webhookSecret,
-      origin,
       ...opts,
-      baseURL: baseURL || `${origin}`,
+      baseURL,
+      environment: opts.environment ?? 'production',
     };
 
-    this.baseURL = options.baseURL!;
+    if (baseURL && opts.environment) {
+      throw new Errors.RacksError(
+        'Ambiguous URL; The `baseURL` option (or RACKS_BASE_URL env var) and the `environment` option are given. If you want to use the environment you must pass baseURL: null',
+      );
+    }
+
+    this.baseURL = options.baseURL || environments[options.environment || 'production'];
     this.timeout = options.timeout ?? Racks.DEFAULT_TIMEOUT /* 1 minute */;
     this.logger = options.logger ?? console;
     const defaultLogLevel = 'warn';
@@ -232,12 +197,7 @@ export class Racks {
 
     this._options = options;
 
-    this.secret = secret;
-    this.publicKey = publicKey;
     this.apiKey = apiKey;
-    this.webhookSignature = webhookSignature;
-    this.webhookSecret = webhookSecret;
-    this.origin = origin;
   }
 
   /**
@@ -246,19 +206,15 @@ export class Racks {
   withOptions(options: Partial<ClientOptions>): this {
     const client = new (this.constructor as any as new (props: ClientOptions) => typeof this)({
       ...this._options,
-      baseURL: this.baseURL,
+      environment: options.environment ? options.environment : undefined,
+      baseURL: options.environment ? undefined : this.baseURL,
       maxRetries: this.maxRetries,
       timeout: this.timeout,
       logger: this.logger,
       logLevel: this.logLevel,
       fetch: this.fetch,
       fetchOptions: this.fetchOptions,
-      secret: this.secret,
-      publicKey: this.publicKey,
       apiKey: this.apiKey,
-      webhookSignature: this.webhookSignature,
-      webhookSecret: this.webhookSecret,
-      origin: this.origin,
       ...options,
     });
     return client;
@@ -268,7 +224,7 @@ export class Racks {
    * Check whether the base URL is set to its default.
    */
   #baseURLOverridden(): boolean {
-    return this.baseURL !== '{origin}';
+    return this.baseURL !== environments[this._options.environment || 'production'];
   }
 
   protected defaultQuery(): Record<string, string | undefined> | undefined {
@@ -276,7 +232,30 @@ export class Racks {
   }
 
   protected validateHeaders({ values, nulls }: NullableHeaders) {
-    return;
+    if (this.apiKey && values.get('authorization')) {
+      return;
+    }
+    if (nulls.has('authorization')) {
+      return;
+    }
+
+    throw new Error(
+      'Could not resolve authentication method. Expected the apiKey to be set. Or for the "Authorization" headers to be explicitly omitted',
+    );
+  }
+
+  protected async authHeaders(
+    opts: FinalRequestOptions,
+    schemes: { bearerCircleAPIKeyAuth?: boolean },
+  ): Promise<NullableHeaders | undefined> {
+    return buildHeaders([schemes.bearerCircleAPIKeyAuth ? await this.bearerCircleAPIKeyAuth(opts) : null]);
+  }
+
+  protected async bearerCircleAPIKeyAuth(opts: FinalRequestOptions): Promise<NullableHeaders | undefined> {
+    if (this.apiKey == null) {
+      return undefined;
+    }
+    return buildHeaders([{ Authorization: `Bearer ${this.apiKey}` }]);
   }
 
   /**
@@ -705,6 +684,7 @@ export class Racks {
         ...(options.timeout ? { 'X-Stainless-Timeout': String(Math.trunc(options.timeout / 1000)) } : {}),
         ...getPlatformHeaders(),
       },
+      await this.authHeaders(options, options.__security ?? { bearerCircleAPIKeyAuth: true }),
       this._options.defaultHeaders,
       bodyHeaders,
       options.headers,
@@ -789,23 +769,18 @@ export class Racks {
    * API discovery and documentation
    */
   meta: API.Meta = new API.Meta(this);
+  /**
+   * Global XP leaderboard
+   */
   v1: API.V1 = new API.V1(this);
   user: API.User = new API.User(this);
-  ai: API.AI = new API.AI(this);
-  zernio: API.Zernio = new API.Zernio(this);
-  raids: API.Raids = new API.Raids(this);
-  zealy: API.Zealy = new API.Zealy(this);
-  telegram: API.Telegram = new API.Telegram(this);
+  circles: API.Circles = new API.Circles(this);
 }
 
 Racks.Meta = Meta;
 Racks.V1 = V1;
 Racks.User = User;
-Racks.AI = AI;
-Racks.Zernio = Zernio;
-Racks.Raids = Raids;
-Racks.Zealy = Zealy;
-Racks.Telegram = Telegram;
+Racks.Circles = Circles;
 
 export declare namespace Racks {
   export type RequestOptions = Opts.RequestOptions;
@@ -816,17 +791,14 @@ export declare namespace Racks {
     type MetaRetrieveRacksAPIResponse as MetaRetrieveRacksAPIResponse,
   };
 
-  export { V1 as V1 };
+  export {
+    V1 as V1,
+    type LeaderboardEntry as LeaderboardEntry,
+    type V1RetrieveGlobalLeaderboardResponse as V1RetrieveGlobalLeaderboardResponse,
+    type V1RetrieveGlobalLeaderboardParams as V1RetrieveGlobalLeaderboardParams,
+  };
 
   export { User as User };
 
-  export { AI as AI };
-
-  export { Zernio as Zernio };
-
-  export { Raids as Raids };
-
-  export { Zealy as Zealy };
-
-  export { Telegram as Telegram };
+  export { Circles as Circles };
 }

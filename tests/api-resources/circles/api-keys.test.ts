@@ -10,7 +10,7 @@ const client = new Racks({
 describe('resource apiKeys', () => {
   // Mock server tests are disabled
   test.skip('create', async () => {
-    const responsePromise = client.user.apiKeys.create();
+    const responsePromise = client.circles.apiKeys.create('id');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -24,16 +24,13 @@ describe('resource apiKeys', () => {
   test.skip('create: request options and params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
-      client.user.apiKeys.create(
-        { name: 'My MCP client', type: 'PAT' },
-        { path: '/_stainless_unknown_path' },
-      ),
+      client.circles.apiKeys.create('id', { name: 'CI bot' }, { path: '/_stainless_unknown_path' }),
     ).rejects.toThrow(Racks.NotFoundError);
   });
 
   // Mock server tests are disabled
   test.skip('list', async () => {
-    const responsePromise = client.user.apiKeys.list();
+    const responsePromise = client.circles.apiKeys.list('id');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -44,8 +41,8 @@ describe('resource apiKeys', () => {
   });
 
   // Mock server tests are disabled
-  test.skip('revoke', async () => {
-    const responsePromise = client.user.apiKeys.revoke('id');
+  test.skip('revoke: only required params', async () => {
+    const responsePromise = client.circles.apiKeys.revoke('keyId', { id: 'id' });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -53,5 +50,10 @@ describe('resource apiKeys', () => {
     const dataAndResponse = await responsePromise.withResponse();
     expect(dataAndResponse.data).toBe(response);
     expect(dataAndResponse.response).toBe(rawResponse);
+  });
+
+  // Mock server tests are disabled
+  test.skip('revoke: required and optional params', async () => {
+    const response = await client.circles.apiKeys.revoke('keyId', { id: 'id' });
   });
 });
