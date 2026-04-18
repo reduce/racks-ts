@@ -7,10 +7,12 @@ const client = new Racks({
   baseURL: process.env['TEST_API_BASE_URL'] ?? 'http://127.0.0.1:4010',
 });
 
-describe('resource meta', () => {
+describe('resource posts', () => {
   // Mock server tests are disabled
-  test.skip('retrieveOpenAPI', async () => {
-    const responsePromise = client.meta.retrieveOpenAPI();
+  test.skip('create: only required params', async () => {
+    const responsePromise = client.v1.circles.posts.create('id', {
+      content: 'GM frens! Big news dropping today.',
+    });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -21,8 +23,18 @@ describe('resource meta', () => {
   });
 
   // Mock server tests are disabled
-  test.skip('retrieveRacksAPI', async () => {
-    const responsePromise = client.meta.retrieveRacksAPI();
+  test.skip('create: required and optional params', async () => {
+    const response = await client.v1.circles.posts.create('id', {
+      content: 'GM frens! Big news dropping today.',
+      crossPost: true,
+      mediaUrl: 'mediaUrl',
+      socialAccounts: ['string'],
+    });
+  });
+
+  // Mock server tests are disabled
+  test.skip('list', async () => {
+    const responsePromise = client.v1.circles.posts.list('id');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -30,5 +42,13 @@ describe('resource meta', () => {
     const dataAndResponse = await responsePromise.withResponse();
     expect(dataAndResponse.data).toBe(response);
     expect(dataAndResponse.response).toBe(rawResponse);
+  });
+
+  // Mock server tests are disabled
+  test.skip('list: request options and params are passed correctly', async () => {
+    // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
+    await expect(
+      client.v1.circles.posts.list('id', { limit: 1, offset: 0 }, { path: '/_stainless_unknown_path' }),
+    ).rejects.toThrow(Racks.NotFoundError);
   });
 });

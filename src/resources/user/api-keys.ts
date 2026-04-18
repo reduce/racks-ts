@@ -22,7 +22,7 @@ export class APIKeys extends APIResource {
     body: APIKeyCreateParams | null | undefined = {},
     options?: RequestOptions,
   ): APIPromise<APIKeyCreateResponse> {
-    return this._client.post('/api/user/api-keys', { body, ...options });
+    return this._client.post('/api/user/api-keys', { body, ...options, __security: {} });
   }
 
   /**
@@ -35,7 +35,7 @@ export class APIKeys extends APIResource {
    * ```
    */
   list(options?: RequestOptions): APIPromise<APIKeyListResponse> {
-    return this._client.get('/api/user/api-keys', options);
+    return this._client.get('/api/user/api-keys', { ...options, __security: {} });
   }
 
   /**
@@ -47,7 +47,7 @@ export class APIKeys extends APIResource {
    * ```
    */
   revoke(id: string, options?: RequestOptions): APIPromise<APIKeyRevokeResponse> {
-    return this._client.delete(path`/api/user/api-keys/${id}`, options);
+    return this._client.delete(path`/api/user/api-keys/${id}`, { ...options, __security: {} });
   }
 }
 

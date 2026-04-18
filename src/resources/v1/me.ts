@@ -11,23 +11,38 @@ export class Me extends APIResource {
   /**
    * Returns the authenticated user's profile, stats (cents earned/tipped), XP,
    * level, and default AI model.
+   *
+   * @example
+   * ```ts
+   * const me = await client.v1.me.retrieve();
+   * ```
    */
   retrieve(options?: RequestOptions): APIPromise<MeRetrieveResponse> {
-    return this._client.get('/api/v1/me', options);
+    return this._client.get('/api/v1/me', { ...options, __security: {} });
   }
 
   /**
    * Earned badges for the token owner
+   *
+   * @example
+   * ```ts
+   * const response = await client.v1.me.listBadges();
+   * ```
    */
   listBadges(options?: RequestOptions): APIPromise<MeListBadgesResponse> {
-    return this._client.get('/api/v1/me/badges', options);
+    return this._client.get('/api/v1/me/badges', { ...options, __security: {} });
   }
 
   /**
    * Returns all circles the authenticated user belongs to, with role and timestamps.
+   *
+   * @example
+   * ```ts
+   * const response = await client.v1.me.listCircles();
+   * ```
    */
   listCircles(options?: RequestOptions): APIPromise<MeListCirclesResponse> {
-    return this._client.get('/api/v1/me/circles', options);
+    return this._client.get('/api/v1/me/circles', { ...options, __security: {} });
   }
 }
 
