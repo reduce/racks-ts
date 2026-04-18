@@ -2,7 +2,7 @@
 
 import { APIResource } from '../../core/resource';
 import * as SubmissionsAPI from './submissions';
-import { SubmissionExportResponse, Submissions } from './submissions';
+import { Submissions } from './submissions';
 
 export class Raids extends APIResource {
   submissions: SubmissionsAPI.Submissions = new SubmissionsAPI.Submissions(this._client);
@@ -11,5 +11,5 @@ export class Raids extends APIResource {
 Raids.Submissions = Submissions;
 
 export declare namespace Raids {
-  export { Submissions as Submissions, type SubmissionExportResponse as SubmissionExportResponse };
+  export { Submissions as Submissions };
 }

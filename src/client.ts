@@ -18,30 +18,10 @@ import * as Uploads from './core/uploads';
 import * as API from './resources/index';
 import { APIPromise } from './core/api-promise';
 import { Meta, MetaRetrieveOpenAPIResponse, MetaRetrieveRacksAPIResponse } from './resources/meta';
-import { Telegram, TelegramSetWebhookParams } from './resources/telegram';
-import {
-  Zealy,
-  ZealyCreateActionParams,
-  ZealyCreateActionResponse,
-  ZealyDeleteWebhookParams,
-  ZealyReceiveWebhookParams,
-  ZealyRetrieveResponse,
-} from './resources/zealy';
-import {
-  Zernio,
-  ZernioDisconnectAccountParams,
-  ZernioOAuthCallbackParams,
-  ZernioStartOAuthParams,
-} from './resources/zernio';
-import {
-  AI,
-  AIChatParams,
-  AIChatResponse,
-  AIDelegateParams,
-  AIDelegateResponse,
-  AIListModelsResponse,
-  AIRetrieveUsageResponse,
-} from './resources/ai/ai';
+import { Telegram } from './resources/telegram';
+import { Zealy } from './resources/zealy';
+import { Zernio } from './resources/zernio';
+import { AI } from './resources/ai/ai';
 import { Raids } from './resources/raids/raids';
 import { User } from './resources/user/user';
 import { V1 } from './resources/v1/v1';
@@ -296,98 +276,7 @@ export class Racks {
   }
 
   protected validateHeaders({ values, nulls }: NullableHeaders) {
-    if (this.secret && values.get('authorization')) {
-      return;
-    }
-    if (nulls.has('authorization')) {
-      return;
-    }
-
-    if (this.publicKey && values.get('x-client-key')) {
-      return;
-    }
-    if (nulls.has('x-client-key')) {
-      return;
-    }
-
-    if (this.apiKey && values.get('authorization')) {
-      return;
-    }
-    if (nulls.has('authorization')) {
-      return;
-    }
-
-    if (this.webhookSignature && values.get('x-zealy-signature')) {
-      return;
-    }
-    if (nulls.has('x-zealy-signature')) {
-      return;
-    }
-
-    if (this.webhookSecret && values.get('x-telegram-bot-api-secret-token')) {
-      return;
-    }
-    if (nulls.has('x-telegram-bot-api-secret-token')) {
-      return;
-    }
-
-    throw new Error(
-      'Could not resolve authentication method. Expected one of secret, publicKey, apiKey, webhookSignature or webhookSecret to be set. Or for one of the "Authorization", "X-Client-Key", "Authorization", "x-zealy-signature" or "x-telegram-bot-api-secret-token" headers to be explicitly omitted',
-    );
-  }
-
-  protected async authHeaders(
-    opts: FinalRequestOptions,
-    schemes: {
-      secretKeyAuth?: boolean;
-      clientKeyAuth?: boolean;
-      aiDelegationBearerAuth?: boolean;
-      zealyWebhookAuth?: boolean;
-      telegramWebhookAuth?: boolean;
-    },
-  ): Promise<NullableHeaders | undefined> {
-    return buildHeaders([
-      schemes.secretKeyAuth ? await this.secretKeyAuth(opts) : null,
-      schemes.clientKeyAuth ? await this.clientKeyAuth(opts) : null,
-      schemes.aiDelegationBearerAuth ? await this.aiDelegationBearerAuth(opts) : null,
-      schemes.zealyWebhookAuth ? await this.zealyWebhookAuth(opts) : null,
-      schemes.telegramWebhookAuth ? await this.telegramWebhookAuth(opts) : null,
-    ]);
-  }
-
-  protected async secretKeyAuth(opts: FinalRequestOptions): Promise<NullableHeaders | undefined> {
-    if (this.secret == null) {
-      return undefined;
-    }
-    return buildHeaders([{ Authorization: `Bearer ${this.secret}` }]);
-  }
-
-  protected async clientKeyAuth(opts: FinalRequestOptions): Promise<NullableHeaders | undefined> {
-    if (this.publicKey == null) {
-      return undefined;
-    }
-    return buildHeaders([{ 'X-Client-Key': this.publicKey }]);
-  }
-
-  protected async aiDelegationBearerAuth(opts: FinalRequestOptions): Promise<NullableHeaders | undefined> {
-    if (this.apiKey == null) {
-      return undefined;
-    }
-    return buildHeaders([{ Authorization: `Bearer ${this.apiKey}` }]);
-  }
-
-  protected async zealyWebhookAuth(opts: FinalRequestOptions): Promise<NullableHeaders | undefined> {
-    if (this.webhookSignature == null) {
-      return undefined;
-    }
-    return buildHeaders([{ 'x-zealy-signature': this.webhookSignature }]);
-  }
-
-  protected async telegramWebhookAuth(opts: FinalRequestOptions): Promise<NullableHeaders | undefined> {
-    if (this.webhookSecret == null) {
-      return undefined;
-    }
-    return buildHeaders([{ 'x-telegram-bot-api-secret-token': this.webhookSecret }]);
+    return;
   }
 
   /**
@@ -816,16 +705,6 @@ export class Racks {
         ...(options.timeout ? { 'X-Stainless-Timeout': String(Math.trunc(options.timeout / 1000)) } : {}),
         ...getPlatformHeaders(),
       },
-      await this.authHeaders(
-        options,
-        options.__security ?? {
-          secretKeyAuth: true,
-          clientKeyAuth: true,
-          aiDelegationBearerAuth: true,
-          zealyWebhookAuth: true,
-          telegramWebhookAuth: true,
-        },
-      ),
       this._options.defaultHeaders,
       bodyHeaders,
       options.headers,
@@ -907,24 +786,15 @@ export class Racks {
   static toFile = Uploads.toFile;
 
   /**
-   * Machine-readable API metadata (public — no auth required)
+   * API discovery and documentation
    */
   meta: API.Meta = new API.Meta(this);
   v1: API.V1 = new API.V1(this);
   user: API.User = new API.User(this);
-  /**
-   * In-app assistant and model settings (browser session required)
-   */
   ai: API.AI = new API.AI(this);
-  /**
-   * Zernio social connect flows
-   */
   zernio: API.Zernio = new API.Zernio(this);
   raids: API.Raids = new API.Raids(this);
   zealy: API.Zealy = new API.Zealy(this);
-  /**
-   * Inbound provider webhooks
-   */
   telegram: API.Telegram = new API.Telegram(this);
 }
 
@@ -950,33 +820,13 @@ export declare namespace Racks {
 
   export { User as User };
 
-  export {
-    AI as AI,
-    type AIChatResponse as AIChatResponse,
-    type AIDelegateResponse as AIDelegateResponse,
-    type AIListModelsResponse as AIListModelsResponse,
-    type AIRetrieveUsageResponse as AIRetrieveUsageResponse,
-    type AIChatParams as AIChatParams,
-    type AIDelegateParams as AIDelegateParams,
-  };
+  export { AI as AI };
 
-  export {
-    Zernio as Zernio,
-    type ZernioDisconnectAccountParams as ZernioDisconnectAccountParams,
-    type ZernioOAuthCallbackParams as ZernioOAuthCallbackParams,
-    type ZernioStartOAuthParams as ZernioStartOAuthParams,
-  };
+  export { Zernio as Zernio };
 
   export { Raids as Raids };
 
-  export {
-    Zealy as Zealy,
-    type ZealyRetrieveResponse as ZealyRetrieveResponse,
-    type ZealyCreateActionResponse as ZealyCreateActionResponse,
-    type ZealyCreateActionParams as ZealyCreateActionParams,
-    type ZealyDeleteWebhookParams as ZealyDeleteWebhookParams,
-    type ZealyReceiveWebhookParams as ZealyReceiveWebhookParams,
-  };
+  export { Zealy as Zealy };
 
-  export { Telegram as Telegram, type TelegramSetWebhookParams as TelegramSetWebhookParams };
+  export { Telegram as Telegram };
 }

@@ -6,34 +6,31 @@ import { buildHeaders } from '../internal/headers';
 import { RequestOptions } from '../internal/request-options';
 
 /**
- * Machine-readable API metadata (public — no auth required)
+ * API discovery and documentation
  */
 export class Meta extends APIResource {
   /**
-   * This specification, served as `text/yaml`. Fully public — no credentials
-   * required. CORS headers allow any origin to fetch this spec for use in Swagger
-   * UI, Redoc, Postman, etc.
+   * Returns this OpenAPI 3.1 YAML document. No authentication required. CORS open.
    */
   retrieveOpenAPI(options?: RequestOptions): APIPromise<string> {
     return this._client.get('/api/meta/openapi', {
       ...options,
       headers: buildHeaders([{ Accept: 'text/yaml' }, options?.headers]),
-      __security: {},
     });
   }
 
   /**
-   * Same structure as `src/lib/racks-api-catalog.json` — endpoints, auth notes, and
-   * integration hints.
+   * Returns a JSON file listing all public API routes with auth requirements and
+   * descriptions.
    */
-  retrieveRacksAPI(options?: RequestOptions): APIPromise<MetaRetrieveRacksAPIResponse> {
-    return this._client.get('/api/meta/racks-api', { ...options, __security: {} });
+  retrieveRacksAPI(options?: RequestOptions): APIPromise<unknown> {
+    return this._client.get('/api/meta/racks-api', options);
   }
 }
 
 export type MetaRetrieveOpenAPIResponse = string;
 
-export type MetaRetrieveRacksAPIResponse = { [key: string]: unknown };
+export type MetaRetrieveRacksAPIResponse = unknown;
 
 export declare namespace Meta {
   export {

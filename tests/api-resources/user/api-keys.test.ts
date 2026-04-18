@@ -2,14 +2,7 @@
 
 import Racks from 'racks';
 
-const client = new Racks({
-  secret: 'My Secret',
-  publicKey: 'My Public Key',
-  apiKey: 'My API Key',
-  webhookSignature: 'My Webhook Signature',
-  webhookSecret: 'My Webhook Secret',
-  baseURL: process.env['TEST_API_BASE_URL'] ?? 'http://127.0.0.1:4010',
-});
+const client = new Racks({ baseURL: process.env['TEST_API_BASE_URL'] ?? 'http://127.0.0.1:4010' });
 
 describe('resource apiKeys', () => {
   // Mock server tests are disabled
@@ -28,7 +21,10 @@ describe('resource apiKeys', () => {
   test.skip('create: request options and params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
-      client.user.apiKeys.create({ name: 'name', type: 'pat' }, { path: '/_stainless_unknown_path' }),
+      client.user.apiKeys.create(
+        { name: 'My MCP client', type: 'PAT' },
+        { path: '/_stainless_unknown_path' },
+      ),
     ).rejects.toThrow(Racks.NotFoundError);
   });
 

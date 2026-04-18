@@ -2,14 +2,7 @@
 
 import Racks from 'racks';
 
-const client = new Racks({
-  secret: 'My Secret',
-  publicKey: 'My Public Key',
-  apiKey: 'My API Key',
-  webhookSignature: 'My Webhook Signature',
-  webhookSecret: 'My Webhook Secret',
-  baseURL: process.env['TEST_API_BASE_URL'] ?? 'http://127.0.0.1:4010',
-});
+const client = new Racks({ baseURL: process.env['TEST_API_BASE_URL'] ?? 'http://127.0.0.1:4010' });
 
 describe('resource me', () => {
   // Mock server tests are disabled

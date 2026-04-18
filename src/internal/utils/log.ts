@@ -107,9 +107,6 @@ export const formatRequestDetails = (details: {
           name,
           (
             name.toLowerCase() === 'authorization' ||
-            name.toLowerCase() === 'x-client-key' ||
-            name.toLowerCase() === 'x-zealy-signature' ||
-            name.toLowerCase() === 'x-telegram-bot-api-secret-token' ||
             name.toLowerCase() === 'cookie' ||
             name.toLowerCase() === 'set-cookie'
           ) ?
