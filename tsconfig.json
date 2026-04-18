@@ -8,8 +8,8 @@
     "moduleResolution": "node",
     "esModuleInterop": true,
     "paths": {
-      "racks/*": ["./src/*"],
-      "racks": ["./src/index.ts"]
+      "racks.cash/*": ["./src/*"],
+      "racks.cash": ["./src/index.ts"]
     },
     "noEmit": true,
 
