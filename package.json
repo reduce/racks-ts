@@ -1,12 +1,12 @@
 {
-  "name": "racks.cash",
+  "name": "racks",
   "version": "0.2.0",
   "description": "The official TypeScript library for the Racks API",
   "author": "Racks <>",
   "types": "dist/index.d.ts",
   "main": "dist/index.js",
   "type": "commonjs",
-  "repository": "github:reduce/racks-ts",
+  "repository": "github:stainless-sdks/racks-typescript",
   "license": "Apache-2.0",
   "packageManager": "pnpm@10.30.1",
   "files": [
