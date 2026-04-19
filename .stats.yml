@@ -1,4 +1,4 @@
 configured_endpoints: 21
-openapi_spec_url: https://storage.googleapis.com/stainless-sdk-openapi-specs/sudo-reduce%2Fracks-bf60c1380fe55bd46298e9778de54d8fe3159cd94b0c9ebc06435a57b142f1b8.yml
-openapi_spec_hash: 760c84f8238e80270bbbade0bc04c408
+openapi_spec_url: https://storage.googleapis.com/stainless-sdk-openapi-specs/sudo-reduce%2Fracks-9f8f4f7bb068a74e5519eea770541cd67b17597b77db51040500000dd30086e6.yml
+openapi_spec_hash: 9c7dd8329ea993a6fb6074e9569051d4
 config_hash: 53595c92306d4b74e59c10fa749eb880
