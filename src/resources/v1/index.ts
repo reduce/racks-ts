@@ -12,6 +12,6 @@ export { Me, type MeRetrieveResponse, type MeListBadgesResponse, type MeListCirc
 export {
   V1,
   type LeaderboardEntry,
-  type V1RetrieveGlobalLeaderboardResponse,
-  type V1RetrieveGlobalLeaderboardParams,
+  type V1RetrieveLeaderboardResponse,
+  type V1RetrieveLeaderboardParams,
 } from './v1';

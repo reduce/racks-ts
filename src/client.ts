@@ -23,8 +23,8 @@ import { User } from './resources/user/user';
 import {
   LeaderboardEntry,
   V1,
-  V1RetrieveGlobalLeaderboardParams,
-  V1RetrieveGlobalLeaderboardResponse,
+  V1RetrieveLeaderboardParams,
+  V1RetrieveLeaderboardResponse,
 } from './resources/v1/v1';
 import { type Fetch } from './internal/builtin-types';
 import { HeadersLike, NullableHeaders, buildHeaders } from './internal/headers';
@@ -794,8 +794,8 @@ export declare namespace Racks {
   export {
     V1 as V1,
     type LeaderboardEntry as LeaderboardEntry,
-    type V1RetrieveGlobalLeaderboardResponse as V1RetrieveGlobalLeaderboardResponse,
-    type V1RetrieveGlobalLeaderboardParams as V1RetrieveGlobalLeaderboardParams,
+    type V1RetrieveLeaderboardResponse as V1RetrieveLeaderboardResponse,
+    type V1RetrieveLeaderboardParams as V1RetrieveLeaderboardParams,
   };
 
   export { User as User };
