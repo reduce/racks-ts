@@ -43,11 +43,7 @@ export class Social extends APIResource {
    * );
    * ```
    */
-  publish(
-    id: string,
-    body: SocialPublishParams,
-    options?: RequestOptions,
-  ): APIPromise<SocialPublishResponse> {
+  publish(id: string, body: SocialPublishParams, options?: RequestOptions): APIPromise<SocialPublishResponse> {
     return this._client.post(path`/api/v1/circles/${id}/social/publish`, { body, ...options });
   }
 }
@@ -109,6 +105,6 @@ export declare namespace Social {
   export {
     type SocialListAccountsResponse as SocialListAccountsResponse,
     type SocialPublishResponse as SocialPublishResponse,
-    type SocialPublishParams as SocialPublishParams,
+    type SocialPublishParams as SocialPublishParams
   };
 }

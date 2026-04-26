@@ -18,7 +18,7 @@ export class Me extends APIResource {
    * ```
    */
   retrieve(options?: RequestOptions): APIPromise<MeRetrieveResponse> {
-    return this._client.get('/api/v1/me', { ...options, __security: {} });
+    return this._client.get('/api/v1/me', { ...options, __security: {  } });
   }
 
   /**
@@ -30,7 +30,7 @@ export class Me extends APIResource {
    * ```
    */
   listBadges(options?: RequestOptions): APIPromise<MeListBadgesResponse> {
-    return this._client.get('/api/v1/me/badges', { ...options, __security: {} });
+    return this._client.get('/api/v1/me/badges', { ...options, __security: {  } });
   }
 
   /**
@@ -42,7 +42,7 @@ export class Me extends APIResource {
    * ```
    */
   listCircles(options?: RequestOptions): APIPromise<MeListCirclesResponse> {
-    return this._client.get('/api/v1/me/circles', { ...options, __security: {} });
+    return this._client.get('/api/v1/me/circles', { ...options, __security: {  } });
   }
 }
 
@@ -132,6 +132,6 @@ export declare namespace Me {
   export {
     type MeRetrieveResponse as MeRetrieveResponse,
     type MeListBadgesResponse as MeListBadgesResponse,
-    type MeListCirclesResponse as MeListCirclesResponse,
+    type MeListCirclesResponse as MeListCirclesResponse
   };
 }

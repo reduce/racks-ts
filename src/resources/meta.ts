@@ -13,10 +13,7 @@ export class Meta extends APIResource {
    * Returns this OpenAPI 3.1 YAML document. No authentication required. CORS open.
    */
   retrieveOpenAPI(options?: RequestOptions): APIPromise<string> {
-    return this._client.get('/api/meta/openapi', {
-      ...options,
-      headers: buildHeaders([{ Accept: 'text/yaml' }, options?.headers]),
-    });
+    return this._client.get('/api/meta/openapi', { ...options, headers: buildHeaders([{Accept: 'text/yaml'}, options?.headers]) });
   }
 
   /**
@@ -28,13 +25,13 @@ export class Meta extends APIResource {
   }
 }
 
-export type MetaRetrieveOpenAPIResponse = string;
+export type MetaRetrieveOpenAPIResponse = string
 
-export type MetaRetrieveRacksAPIResponse = unknown;
+export type MetaRetrieveRacksAPIResponse = unknown
 
 export declare namespace Meta {
   export {
     type MetaRetrieveOpenAPIResponse as MetaRetrieveOpenAPIResponse,
-    type MetaRetrieveRacksAPIResponse as MetaRetrieveRacksAPIResponse,
+    type MetaRetrieveRacksAPIResponse as MetaRetrieveRacksAPIResponse
   };
 }

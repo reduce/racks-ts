@@ -45,11 +45,7 @@ export class Circles extends APIResource {
    * const response = await client.v1.circles.listMembers('id');
    * ```
    */
-  listMembers(
-    id: string,
-    query: CircleListMembersParams | null | undefined = {},
-    options?: RequestOptions,
-  ): APIPromise<CircleListMembersResponse> {
+  listMembers(id: string, query: CircleListMembersParams | null | undefined = {}, options?: RequestOptions): APIPromise<CircleListMembersResponse> {
     return this._client.get(path`/api/v1/circles/${id}/members`, { query, ...options });
   }
 
@@ -62,11 +58,7 @@ export class Circles extends APIResource {
    *   await client.v1.circles.retrieveLeaderboard('id');
    * ```
    */
-  retrieveLeaderboard(
-    id: string,
-    query: CircleRetrieveLeaderboardParams | null | undefined = {},
-    options?: RequestOptions,
-  ): APIPromise<CircleRetrieveLeaderboardResponse> {
+  retrieveLeaderboard(id: string, query: CircleRetrieveLeaderboardParams | null | undefined = {}, options?: RequestOptions): APIPromise<CircleRetrieveLeaderboardResponse> {
     return this._client.get(path`/api/v1/circles/${id}/leaderboard`, { query, ...options });
   }
 }
@@ -168,7 +160,7 @@ export declare namespace Circles {
     type CircleListMembersResponse as CircleListMembersResponse,
     type CircleRetrieveLeaderboardResponse as CircleRetrieveLeaderboardResponse,
     type CircleListMembersParams as CircleListMembersParams,
-    type CircleRetrieveLeaderboardParams as CircleRetrieveLeaderboardParams,
+    type CircleRetrieveLeaderboardParams as CircleRetrieveLeaderboardParams
   };
 
   export {
@@ -177,7 +169,7 @@ export declare namespace Circles {
     type Quest as Quest,
     type QuestListResponse as QuestListResponse,
     type QuestCreateParams as QuestCreateParams,
-    type QuestListParams as QuestListParams,
+    type QuestListParams as QuestListParams
   };
 
   export {
@@ -186,13 +178,13 @@ export declare namespace Circles {
     type PostCreateResponse as PostCreateResponse,
     type PostListResponse as PostListResponse,
     type PostCreateParams as PostCreateParams,
-    type PostListParams as PostListParams,
+    type PostListParams as PostListParams
   };
 
   export {
     Social as Social,
     type SocialListAccountsResponse as SocialListAccountsResponse,
     type SocialPublishResponse as SocialPublishResponse,
-    type SocialPublishParams as SocialPublishParams,
+    type SocialPublishParams as SocialPublishParams
   };
 }

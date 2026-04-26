@@ -2,14 +2,7 @@
 
 import { APIResource } from '../../core/resource';
 import * as APIKeysAPI from './api-keys';
-import {
-  APIKeyCreateParams,
-  APIKeyCreateResponse,
-  APIKeyListResponse,
-  APIKeyRevokeParams,
-  APIKeyRevokeResponse,
-  APIKeys,
-} from './api-keys';
+import { APIKeyCreateParams, APIKeyCreateResponse, APIKeyListResponse, APIKeyRevokeParams, APIKeyRevokeResponse, APIKeys } from './api-keys';
 
 export class Circles extends APIResource {
   apiKeys: APIKeysAPI.APIKeys = new APIKeysAPI.APIKeys(this._client);
@@ -24,6 +17,6 @@ export declare namespace Circles {
     type APIKeyListResponse as APIKeyListResponse,
     type APIKeyRevokeResponse as APIKeyRevokeResponse,
     type APIKeyCreateParams as APIKeyCreateParams,
-    type APIKeyRevokeParams as APIKeyRevokeParams,
+    type APIKeyRevokeParams as APIKeyRevokeParams
   };
 }
