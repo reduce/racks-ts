@@ -2,10 +2,7 @@
 
 import Racks from 'racks';
 
-const client = new Racks({
-  apiKey: 'My API Key',
-  baseURL: process.env['TEST_API_BASE_URL'] ?? 'http://127.0.0.1:4010',
-});
+const client = new Racks({ apiKey: 'My API Key', baseURL: process.env["TEST_API_BASE_URL"] ?? 'http://127.0.0.1:4010' });
 
 describe('resource me', () => {
   // Mock server tests are disabled

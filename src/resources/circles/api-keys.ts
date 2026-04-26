@@ -18,12 +18,8 @@ export class APIKeys extends APIResource {
    * const apiKey = await client.circles.apiKeys.create('id');
    * ```
    */
-  create(
-    id: string,
-    body: APIKeyCreateParams | null | undefined = {},
-    options?: RequestOptions,
-  ): APIPromise<APIKeyCreateResponse> {
-    return this._client.post(path`/api/circles/${id}/api-keys`, { body, ...options, __security: {} });
+  create(id: string, body: APIKeyCreateParams | null | undefined = {}, options?: RequestOptions): APIPromise<APIKeyCreateResponse> {
+    return this._client.post(path`/api/circles/${id}/api-keys`, { body, ...options, __security: {  } });
   }
 
   /**
@@ -36,7 +32,7 @@ export class APIKeys extends APIResource {
    * ```
    */
   list(id: string, options?: RequestOptions): APIPromise<APIKeyListResponse> {
-    return this._client.get(path`/api/circles/${id}/api-keys`, { ...options, __security: {} });
+    return this._client.get(path`/api/circles/${id}/api-keys`, { ...options, __security: {  } });
   }
 
   /**
@@ -51,13 +47,9 @@ export class APIKeys extends APIResource {
    * );
    * ```
    */
-  revoke(
-    keyID: string,
-    params: APIKeyRevokeParams,
-    options?: RequestOptions,
-  ): APIPromise<APIKeyRevokeResponse> {
-    const { id } = params;
-    return this._client.delete(path`/api/circles/${id}/api-keys/${keyID}`, { ...options, __security: {} });
+  revoke(keyID: string, params: APIKeyRevokeParams, options?: RequestOptions): APIPromise<APIKeyRevokeResponse> {
+    const { id } = params
+    return this._client.delete(path`/api/circles/${id}/api-keys/${keyID}`, { ...options, __security: {  } });
   }
 }
 
@@ -109,6 +101,6 @@ export declare namespace APIKeys {
     type APIKeyListResponse as APIKeyListResponse,
     type APIKeyRevokeResponse as APIKeyRevokeResponse,
     type APIKeyCreateParams as APIKeyCreateParams,
-    type APIKeyRevokeParams as APIKeyRevokeParams,
+    type APIKeyRevokeParams as APIKeyRevokeParams
   };
 }

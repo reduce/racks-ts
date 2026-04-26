@@ -18,11 +18,8 @@ export class APIKeys extends APIResource {
    * const apiKey = await client.user.apiKeys.create();
    * ```
    */
-  create(
-    body: APIKeyCreateParams | null | undefined = {},
-    options?: RequestOptions,
-  ): APIPromise<APIKeyCreateResponse> {
-    return this._client.post('/api/user/api-keys', { body, ...options, __security: {} });
+  create(body: APIKeyCreateParams | null | undefined = {}, options?: RequestOptions): APIPromise<APIKeyCreateResponse> {
+    return this._client.post('/api/user/api-keys', { body, ...options, __security: {  } });
   }
 
   /**
@@ -35,7 +32,7 @@ export class APIKeys extends APIResource {
    * ```
    */
   list(options?: RequestOptions): APIPromise<APIKeyListResponse> {
-    return this._client.get('/api/user/api-keys', { ...options, __security: {} });
+    return this._client.get('/api/user/api-keys', { ...options, __security: {  } });
   }
 
   /**
@@ -47,7 +44,7 @@ export class APIKeys extends APIResource {
    * ```
    */
   revoke(id: string, options?: RequestOptions): APIPromise<APIKeyRevokeResponse> {
-    return this._client.delete(path`/api/user/api-keys/${id}`, { ...options, __security: {} });
+    return this._client.delete(path`/api/user/api-keys/${id}`, { ...options, __security: {  } });
   }
 }
 
@@ -115,6 +112,6 @@ export declare namespace APIKeys {
     type APIKeyCreateResponse as APIKeyCreateResponse,
     type APIKeyListResponse as APIKeyListResponse,
     type APIKeyRevokeResponse as APIKeyRevokeResponse,
-    type APIKeyCreateParams as APIKeyCreateParams,
+    type APIKeyCreateParams as APIKeyCreateParams
   };
 }

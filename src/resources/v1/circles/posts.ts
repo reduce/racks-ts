@@ -38,11 +38,7 @@ export class Posts extends APIResource {
    * const posts = await client.v1.circles.posts.list('id');
    * ```
    */
-  list(
-    id: string,
-    query: PostListParams | null | undefined = {},
-    options?: RequestOptions,
-  ): APIPromise<PostListResponse> {
+  list(id: string, query: PostListParams | null | undefined = {}, options?: RequestOptions): APIPromise<PostListResponse> {
     return this._client.get(path`/api/v1/circles/${id}/posts`, { query, ...options });
   }
 }
@@ -137,6 +133,6 @@ export declare namespace Posts {
     type PostCreateResponse as PostCreateResponse,
     type PostListResponse as PostListResponse,
     type PostCreateParams as PostCreateParams,
-    type PostListParams as PostListParams,
+    type PostListParams as PostListParams
   };
 }
