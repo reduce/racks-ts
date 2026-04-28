@@ -41,7 +41,11 @@ export class Quests extends APIResource {
    * const quests = await client.v1.circles.quests.list('id');
    * ```
    */
-  list(id: string, query: QuestListParams | null | undefined = {}, options?: RequestOptions): APIPromise<QuestListResponse> {
+  list(
+    id: string,
+    query: QuestListParams | null | undefined = {},
+    options?: RequestOptions,
+  ): APIPromise<QuestListResponse> {
     return this._client.get(path`/api/v1/circles/${id}/quests`, { query, ...options });
   }
 }
@@ -150,6 +154,6 @@ export declare namespace Quests {
     type Quest as Quest,
     type QuestListResponse as QuestListResponse,
     type QuestCreateParams as QuestCreateParams,
-    type QuestListParams as QuestListParams
+    type QuestListParams as QuestListParams,
   };
 }

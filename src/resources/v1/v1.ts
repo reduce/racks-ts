@@ -4,7 +4,14 @@ import { APIResource } from '../../core/resource';
 import * as MeAPI from './me';
 import { Me, MeListBadgesResponse, MeListCirclesResponse, MeRetrieveResponse } from './me';
 import * as CirclesAPI from './circles/circles';
-import { CircleListMembersParams, CircleListMembersResponse, CircleRetrieveLeaderboardParams, CircleRetrieveLeaderboardResponse, CircleRetrieveResponse, Circles } from './circles/circles';
+import {
+  CircleListMembersParams,
+  CircleListMembersResponse,
+  CircleRetrieveLeaderboardParams,
+  CircleRetrieveLeaderboardResponse,
+  CircleRetrieveResponse,
+  Circles,
+} from './circles/circles';
 import { APIPromise } from '../../core/api-promise';
 import { RequestOptions } from '../../internal/request-options';
 
@@ -23,8 +30,11 @@ export class V1 extends APIResource {
    * const response = await client.v1.retrieveLeaderboard();
    * ```
    */
-  retrieveLeaderboard(query: V1RetrieveLeaderboardParams | null | undefined = {}, options?: RequestOptions): APIPromise<V1RetrieveLeaderboardResponse> {
-    return this._client.get('/api/v1/leaderboard', { query, ...options, __security: {  } });
+  retrieveLeaderboard(
+    query: V1RetrieveLeaderboardParams | null | undefined = {},
+    options?: RequestOptions,
+  ): APIPromise<V1RetrieveLeaderboardResponse> {
+    return this._client.get('/api/v1/leaderboard', { query, ...options, __security: {} });
   }
 }
 
@@ -60,14 +70,14 @@ export declare namespace V1 {
   export {
     type LeaderboardEntry as LeaderboardEntry,
     type V1RetrieveLeaderboardResponse as V1RetrieveLeaderboardResponse,
-    type V1RetrieveLeaderboardParams as V1RetrieveLeaderboardParams
+    type V1RetrieveLeaderboardParams as V1RetrieveLeaderboardParams,
   };
 
   export {
     Me as Me,
     type MeRetrieveResponse as MeRetrieveResponse,
     type MeListBadgesResponse as MeListBadgesResponse,
-    type MeListCirclesResponse as MeListCirclesResponse
+    type MeListCirclesResponse as MeListCirclesResponse,
   };
 
   export {
@@ -76,6 +86,6 @@ export declare namespace V1 {
     type CircleListMembersResponse as CircleListMembersResponse,
     type CircleRetrieveLeaderboardResponse as CircleRetrieveLeaderboardResponse,
     type CircleListMembersParams as CircleListMembersParams,
-    type CircleRetrieveLeaderboardParams as CircleRetrieveLeaderboardParams
+    type CircleRetrieveLeaderboardParams as CircleRetrieveLeaderboardParams,
   };
 }

@@ -2,7 +2,13 @@
 
 import { APIResource } from '../../core/resource';
 import * as APIKeysAPI from './api-keys';
-import { APIKeyCreateParams, APIKeyCreateResponse, APIKeyListResponse, APIKeyRevokeResponse, APIKeys } from './api-keys';
+import {
+  APIKeyCreateParams,
+  APIKeyCreateResponse,
+  APIKeyListResponse,
+  APIKeyRevokeResponse,
+  APIKeys,
+} from './api-keys';
 
 export class User extends APIResource {
   apiKeys: APIKeysAPI.APIKeys = new APIKeysAPI.APIKeys(this._client);
@@ -16,6 +22,6 @@ export declare namespace User {
     type APIKeyCreateResponse as APIKeyCreateResponse,
     type APIKeyListResponse as APIKeyListResponse,
     type APIKeyRevokeResponse as APIKeyRevokeResponse,
-    type APIKeyCreateParams as APIKeyCreateParams
+    type APIKeyCreateParams as APIKeyCreateParams,
   };
 }
