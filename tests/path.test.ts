@@ -1,4 +1,4 @@
-import { createPathTagFunction, encodeURIPath } from 'racks.cash/internal/utils/path';
+import { createPathTagFunction, encodeURIPath } from 'racks/internal/utils/path';
 import { inspect } from 'node:util';
 import { runInNewContext } from 'node:vm';
 

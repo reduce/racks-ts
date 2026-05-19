@@ -15,11 +15,11 @@ Methods:
 Types:
 
 - <code><a href="./src/resources/v1/v1.ts">LeaderboardEntry</a></code>
-- <code><a href="./src/resources/v1/v1.ts">V1RetrieveGlobalLeaderboardResponse</a></code>
+- <code><a href="./src/resources/v1/v1.ts">V1RetrieveLeaderboardResponse</a></code>
 
 Methods:
 
-- <code title="get /api/v1/leaderboard">client.v1.<a href="./src/resources/v1/v1.ts">retrieveGlobalLeaderboard</a>({ ...params }) -> V1RetrieveGlobalLeaderboardResponse</code>
+- <code title="get /api/v1/leaderboard">client.v1.<a href="./src/resources/v1/v1.ts">retrieveLeaderboard</a>({ ...params }) -> V1RetrieveLeaderboardResponse</code>
 
 ## Me
 
