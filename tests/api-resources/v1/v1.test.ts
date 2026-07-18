@@ -1,6 +1,6 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-import Racks from 'racks.cash';
+import Racks from 'racks';
 
 const client = new Racks({
   apiKey: 'My API Key',
@@ -9,8 +9,8 @@ const client = new Racks({
 
 describe('resource v1', () => {
   // Mock server tests are disabled
-  test.skip('retrieveGlobalLeaderboard', async () => {
-    const responsePromise = client.v1.retrieveGlobalLeaderboard();
+  test.skip('retrieveLeaderboard', async () => {
+    const responsePromise = client.v1.retrieveLeaderboard();
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -21,10 +21,10 @@ describe('resource v1', () => {
   });
 
   // Mock server tests are disabled
-  test.skip('retrieveGlobalLeaderboard: request options and params are passed correctly', async () => {
+  test.skip('retrieveLeaderboard: request options and params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
-      client.v1.retrieveGlobalLeaderboard({ limit: 1 }, { path: '/_stainless_unknown_path' }),
+      client.v1.retrieveLeaderboard({ limit: 1 }, { path: '/_stainless_unknown_path' }),
     ).rejects.toThrow(Racks.NotFoundError);
   });
 });

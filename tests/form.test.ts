@@ -1,5 +1,5 @@
-import { multipartFormRequestOptions, createForm } from 'racks.cash/internal/uploads';
-import { toFile } from 'racks.cash/core/uploads';
+import { multipartFormRequestOptions, createForm } from 'racks/internal/uploads';
+import { toFile } from 'racks/core/uploads';
 
 describe('form data validation', () => {
   test('valid values do not error', async () => {

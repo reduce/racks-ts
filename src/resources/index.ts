@@ -6,6 +6,6 @@ export { User } from './user/user';
 export {
   V1,
   type LeaderboardEntry,
-  type V1RetrieveGlobalLeaderboardResponse,
-  type V1RetrieveGlobalLeaderboardParams,
+  type V1RetrieveLeaderboardResponse,
+  type V1RetrieveLeaderboardParams,
 } from './v1/v1';

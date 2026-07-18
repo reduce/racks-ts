@@ -27,14 +27,13 @@ export class V1 extends APIResource {
    *
    * @example
    * ```ts
-   * const response =
-   *   await client.v1.retrieveGlobalLeaderboard();
+   * const response = await client.v1.retrieveLeaderboard();
    * ```
    */
-  retrieveGlobalLeaderboard(
-    query: V1RetrieveGlobalLeaderboardParams | null | undefined = {},
+  retrieveLeaderboard(
+    query: V1RetrieveLeaderboardParams | null | undefined = {},
     options?: RequestOptions,
-  ): APIPromise<V1RetrieveGlobalLeaderboardResponse> {
+  ): APIPromise<V1RetrieveLeaderboardResponse> {
     return this._client.get('/api/v1/leaderboard', { query, ...options, __security: {} });
   }
 }
@@ -53,11 +52,11 @@ export interface LeaderboardEntry {
   xp?: number;
 }
 
-export interface V1RetrieveGlobalLeaderboardResponse {
+export interface V1RetrieveLeaderboardResponse {
   entries?: Array<LeaderboardEntry>;
 }
 
-export interface V1RetrieveGlobalLeaderboardParams {
+export interface V1RetrieveLeaderboardParams {
   /**
    * Max results (1–100, default 25)
    */
@@ -70,8 +69,8 @@ V1.Circles = Circles;
 export declare namespace V1 {
   export {
     type LeaderboardEntry as LeaderboardEntry,
-    type V1RetrieveGlobalLeaderboardResponse as V1RetrieveGlobalLeaderboardResponse,
-    type V1RetrieveGlobalLeaderboardParams as V1RetrieveGlobalLeaderboardParams,
+    type V1RetrieveLeaderboardResponse as V1RetrieveLeaderboardResponse,
+    type V1RetrieveLeaderboardParams as V1RetrieveLeaderboardParams,
   };
 
   export {
